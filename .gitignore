@@ -3,11 +3,9 @@
 #################
 
 #my gitignore
-/bin/
 *.class
 *.temp
 *.sqlite
-*.project
 
 *.pydevproject
 .project
