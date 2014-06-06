@@ -7,6 +7,7 @@ import java.io.InputStreamReader;
     
 	public class FileFromDiskLoader{
 		
+		private String wordBank = null;
 		private String filePath = null;
 		private String settingsPath = null;
 		private String initialChar = null;
@@ -22,9 +23,10 @@ import java.io.InputStreamReader;
 			
 		}
 		
-		FileFromDiskLoader(String filePath,String settingsPath,String initialChar,int number){
+		FileFromDiskLoader(String filePath,String settingsPath,String wordBank,String initialChar,int number){
 			this.filePath = filePath;
 			this.settingsPath = settingsPath;
+			this.wordBank = wordBank;
 			this.initialChar = initialChar;
 			this.number = number;
 			setup();
@@ -49,10 +51,10 @@ import java.io.InputStreamReader;
                     String lineTxt = null;
                     
                     while((lineTxt = bufferedReader.readLine()) != null){
-                        if(lineTxt.contains("index")){
+                        if(lineTxt.contains("index") && lineTxt.startsWith(wordBank)){
                         	begin = lineTxt.indexOf('=')+1;
                         	this.index = Integer.parseInt(lineTxt.substring(begin));
-                        }else if(lineTxt.contains("number")){
+                        }else if(lineTxt.contains("number") && lineTxt.startsWith(wordBank)){
                         	begin = lineTxt.indexOf('=')+1;
                         	this.old_number = Integer.parseInt(lineTxt.substring(begin));
                         }
