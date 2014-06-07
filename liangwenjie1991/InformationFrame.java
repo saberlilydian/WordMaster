@@ -9,7 +9,21 @@ public class InformationFrame extends JFrame{
 	public InformationFrame(String wordBase){
 		NumberFormat numF = NumberFormat.getPercentInstance();
 		numF.setMinimumFractionDigits(2);		
-		Object[][] cellData = {{"词库名", wordBase.toUpperCase()}, {"词库单词总数", 100}, {"已背单词数", 100}, {"正确单词数", 100}, {"错误单词数", 100}, {"正确率", numF.format(1)}};
+		
+		String settingsPath = "settings.txt";
+		
+		Properties proper = new Properties(Frame.getWordBase().charAt(0), settingsPath); 
+		int index = proper.getIndex();
+		int num = proper.getNumber();
+		int correct = proper.getRight();
+		int wrong = proper.getWrong();
+		double rate = 0;
+		if(num==0)
+			rate = 0;
+		else
+			rate = ((double)correct)/num;
+		
+		Object[][] cellData = {{"词库名", wordBase.toUpperCase()}, {"词库单词总数", index}, {"已背单词数", num}, {"正确单词数", correct}, {"错误单词数", wrong}, {"正确率", numF.format(rate)}};
 		String[] columnNames = {"", ""}; 
 		JTable table = new JTable(cellData, columnNames);
 		table.setRowHeight(30); 		

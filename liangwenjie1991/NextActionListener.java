@@ -7,7 +7,7 @@ import javax.swing.JOptionPane;
 import javax.swing.JTextField;
 
 public class NextActionListener implements ActionListener{
-	public void actionPerformed(ActionEvent e){
+	public void actionPerformed(ActionEvent e){		
 	    
 		FileFromDiskLoader fileFDL = NumActionListener.getFileFDL();
 		JTextField jText = Frame.getJText();
@@ -15,10 +15,27 @@ public class NextActionListener implements ActionListener{
 		String input = jText.getText().toLowerCase().trim();
 		String word = Frame.getWord();
 		int num = Frame.getNumber();
-
+        
+		String filePath = "dictionary.txt";
+		String recordPath = "";
+		
+		PropertyValue proValue = new PropertyValue(filePath, recordPath);
+		int status = proValue.getStatus(word);
+		
 		if(!input.equals(word)&&!(num==0)){
 			JOptionPane.showMessageDialog(null, "错误！正确单词为："+word);
 			Frame.setWrong(Frame.getWrong()+1);
+			
+			int[] array1 = {2};
+			String[] array2 = {word};
+			
+			if(status==0)
+				proValue.setStatus(array1, array2);
+		}
+		else{
+			int[] array1 = {1};
+			String[] array2 = {word};
+			proValue.setStatus(array1, array2);
 		}
 		
 		String line = fileFDL.next();
@@ -37,6 +54,10 @@ public class NextActionListener implements ActionListener{
 			jText.setText("");
 			Frame.repain("");
 			Frame.setWord(null);
+			
+			X x = new X();
+			X.setLastWord(wordBase, word);
+			
 			return;
 		}
 		
