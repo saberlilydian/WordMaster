@@ -34,8 +34,10 @@ public class NumActionListener implements ActionListener{
 			 	    
 			case 1:String input =  Frame.getInput(); //输入单词，在词库中查找，查找不到则进入case0	 	    
 			       fileFDL = new FileFromDiskLoader(filePath, settingsPath, wordBase, input, num);
-			       if(Frame.getInput().equals("一"))
-			    	   jcbo.setSelectedIndex(0);
+			       if(Frame.getInput().equals("一")){
+			    	   jcbo.setSelectedIndex(0);			    	
+			       }
+			    	   
 			 	   break;
 			 	          
 			case 2:fileFDL = new FileFromDiskLoader(filePath, settingsPath, wordBase, null, num);

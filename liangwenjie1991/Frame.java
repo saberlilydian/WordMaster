@@ -94,7 +94,7 @@ public class Frame extends JFrame{
 		start.setSelectedIndex(0);
 		
 		nextWord.addActionListener(new NextActionListener());
-		//
+		newWordBase.addActionListener(new NewWBActionListener());
 	}
 	
 	public static JComboBox getJComboBox(){
@@ -107,6 +107,10 @@ public class Frame extends JFrame{
 	
 	public static String getWordBase(){
 		return wordBase;
+	}
+	
+	public static void setWordBase(String myWordBase){
+		wordBase = myWordBase;
 	}
 	
 	public static void repain(String expla){
