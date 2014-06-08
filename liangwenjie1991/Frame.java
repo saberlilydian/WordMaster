@@ -25,6 +25,10 @@ public class Frame extends JFrame{
 	private static JTextField jText = new JTextField(16);    //Ó¢ÎÄµ¥´Ê¿ò
     
 	private static int wrong = 0;    //´íÎóµ¥´ÊÊý
+	
+	private static int addWrong = 0;    //´íÎóµ¥´ÊÊý
+	private static int addRight = 0;    //´íÎóµ¥´ÊÊý
+	private static int addNumber = 0;    //´íÎóµ¥´ÊÊý
     
 	public Frame(){
 		
@@ -147,5 +151,29 @@ public class Frame extends JFrame{
 	
 	public static void setWrong(int myWrong){
 		wrong = myWrong;
+	}
+	
+	public static int getAddWrong(){
+		return addWrong;
+	}
+	
+	public static void setAddWrong(int myAddWrong){
+		addWrong = myAddWrong;
+	}
+	
+	public static int getAddRight(){
+		return addRight;
+	}
+	
+	public static void setAddRight(int myAddRight){
+		addRight = myAddRight;
+	}
+	
+	public static int getAddNumber(){
+		return addNumber;
+	}
+	
+	public static void setAddNumber(int myAddNumber){
+		addNumber = myAddNumber;
 	}
 }

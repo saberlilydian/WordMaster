@@ -15,12 +15,21 @@ public class NextActionListener implements ActionListener{
 		String input = jText.getText().toLowerCase().trim();
 		String word = Frame.getWord();
 		int num = Frame.getNumber();
+		String wordBase = Frame.getWordBase();
+		String settingsPath = "settings.txt";
         
 		String filePath = "dictionary.txt";
-		String recordPath = "";
+		String recordPath = "record.txt";
 		
 		PropertyValue proValue = new PropertyValue(filePath, recordPath);
 		int status = proValue.getStatus(word);
+		Properties proper = new Properties(wordBase.charAt(0), settingsPath); 
+		
+		int index = fileFDL.getIndex();
+		
+		//int addNumber = Frame.getAddNumber();
+		int addRight = Frame.getAddRight();
+		int addWrong = Frame.getAddWrong();
 		
 		if(!input.equals(word)&&!(num==0)){
 			JOptionPane.showMessageDialog(null, "错误！正确单词为："+word);
@@ -29,18 +38,32 @@ public class NextActionListener implements ActionListener{
 			int[] array1 = {2};
 			String[] array2 = {word};
 			
-			if(status==0)
+			if(status==0){
 				proValue.setStatus(array1, array2);
+				//Frame.setAddNumber(++addNumber);
+				Frame.setAddWrong(++addWrong);
+			}
+				
 		}
-		else{
+		else if(!(num==0)){
 			int[] array1 = {1};
 			String[] array2 = {word};
 			proValue.setStatus(array1, array2);
+			
+			if(status==0){
+				//Frame.setAddNumber(++addNumber);
+				Frame.setAddRight(++addRight);
+			}
+			else if(status==2){
+				Frame.setAddRight(++addRight);
+				Frame.setAddWrong(--addWrong);
+			}
+			
 		}
 		
 		String line = fileFDL.next();
 		if(line.equals("完")&&!(num==0)){
-			String wordBase = Frame.getWordBase();
+			
 			int wrong = Frame.getWrong();
 			int correct = num - wrong;
 			OnceInforFrame onceInforFrameFrame = new OnceInforFrame(wordBase, num, correct, wrong, ((double)correct)/num);
@@ -48,6 +71,12 @@ public class NextActionListener implements ActionListener{
 			onceInforFrameFrame.setLocation(200, 300);
 			onceInforFrameFrame.setSize(400,190);
 			onceInforFrameFrame.setVisible(true);
+			System.out.println("LLL"+proper.getWrong());
+			System.out.println("DDD"+Frame.getAddWrong());
+			System.out.println("old Right"+proper.getRight());
+			System.out.println("new Right"+Frame.getAddRight());
+			//Frame.getAddWrong()
+			proper.build(index, num, proper.getRight()+Frame.getAddRight(), proper.getWrong()+Frame.getAddWrong());
 			
 			Frame.setNumber(0);
 			Frame.setWrong(0);
@@ -55,12 +84,12 @@ public class NextActionListener implements ActionListener{
 			Frame.repain("");
 			Frame.setWord(null);
 			
-			X x = new X();
-			X.setLastWord(wordBase, word);
+			Frame.setAddNumber(0);
+			Frame.setAddRight(0);
+			Frame.setAddWrong(0);
 			
 			return;
 		}
-		
 		
 	    String newWord = fileFDL.word(line);
 		String expla = fileFDL.meaning(line);

@@ -26,7 +26,7 @@ public class Properties {
 		this.right = right;
 		this.wrong = wrong;
 		
-File sourceFile = new File(settingsPath);
+        File sourceFile = new File(settingsPath);
 		
 		File targetFile = new File("temp.txt");
 		if(targetFile.exists()){
@@ -47,8 +47,8 @@ File sourceFile = new File(settingsPath);
                     	lineTxt = wordBank + "_number=" + String.valueOf(number);
                     }else if(lineTxt.startsWith(String.valueOf(wordBank)) && lineTxt.contains("right")){
                     	lineTxt = wordBank + "_right=" + String.valueOf(right);
-                    }else if(lineTxt.startsWith(String.valueOf(wordBank)) && lineTxt.contains("wrong")){
-                    	lineTxt = wordBank + "_wrong=" + String.valueOf(wrong);
+                    }else if(lineTxt.startsWith(String.valueOf(wordBank)) && lineTxt.contains("false")){
+                    	lineTxt = wordBank + "_false=" + String.valueOf(wrong);
                     }
                     output.println(lineTxt);
                 }
@@ -83,7 +83,7 @@ File sourceFile = new File(settingsPath);
                     	 this.number = Integer.parseInt(lineTxt.substring(lineTxt.indexOf("=")+1));
                      }else if(lineTxt.startsWith(String.valueOf(wordBank)) && lineTxt.contains("right")){
                     	 this.right = Integer.parseInt(lineTxt.substring(lineTxt.indexOf("=")+1));
-                     }else if(lineTxt.startsWith(String.valueOf(wordBank)) && lineTxt.contains("wrong")){
+                     }else if(lineTxt.startsWith(String.valueOf(wordBank)) && lineTxt.contains("false")){
                     	 this.wrong = Integer.parseInt(lineTxt.substring(lineTxt.indexOf("=")+1));
                      }
                 }

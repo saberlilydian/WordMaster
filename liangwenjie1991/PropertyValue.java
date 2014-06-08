@@ -1,6 +1,7 @@
 package wordMaster;
 
 import java.io.*;
+import java.util.Scanner;
 
 public class PropertyValue {
 
@@ -19,7 +20,7 @@ public class PropertyValue {
 	}
 	
 	private void setup(){
-		File record = new File(recordPath + "\\record.txt");
+		File record = new File(recordPath);
 		if(!record.exists()){
 			try {
 				PrintWriter output = new PrintWriter(record);
@@ -51,7 +52,7 @@ public class PropertyValue {
     	int status = 0;
     	try {
             String encoding="GBK";
-            File file=new File(recordPath + "\\record.txt");
+            File file=new File(recordPath);
             if(file.isFile() && file.exists()){ //判断文件是否存在
                 InputStreamReader read = new InputStreamReader(new FileInputStream(file),encoding);//考虑到编码格式
                 BufferedReader bufferedReader = new BufferedReader(read);
@@ -73,11 +74,10 @@ public class PropertyValue {
     	return status;
     }
 
-    public boolean setStatus(int status[],String word[]){
-    	boolean set = true;
+    public void setStatus(int status[],String word[]){
     	int i;
     	
-        File sourceFile = new File(recordPath + "\\record.txt");
+        File sourceFile = new File(recordPath);
 		
 		File targetFile = new File("temp_record.txt");
 		if(targetFile.exists()){
@@ -86,22 +86,20 @@ public class PropertyValue {
 		
 		try {
 			PrintWriter output = new PrintWriter(targetFile);
-            String encoding="GBK";
+            
             if(sourceFile.isFile() && sourceFile.exists()){ //判断文件是否存在
-                InputStreamReader read = new InputStreamReader(new FileInputStream(sourceFile),encoding);//考虑到编码格式
-                BufferedReader bufferedReader = new BufferedReader(read);
+                Scanner input = new Scanner(sourceFile);
                 String lineTxt = null;
-                while((lineTxt = bufferedReader.readLine()) != null){
+                while(input.hasNext()){
+                	lineTxt = input.nextLine();
                 	for(i = 0 ; i < word.length ; i++){
-                		if(lineTxt.startsWith(word[i])){
+                		if(lineTxt.startsWith(word[i]+" ")){
                 			lineTxt = lineTxt.substring(0,lineTxt.indexOf('=')+1) + String.valueOf(status[i]);
                 		}
                 	}
-                	
-                    
                     output.println(lineTxt);
                 }
-                read.close();
+                input.close();
                 output.close();
     }else{
         System.out.println("找不到指定的文件");
@@ -112,8 +110,8 @@ public class PropertyValue {
     }
 		
 		sourceFile.delete();
-		targetFile.renameTo(new File(recordPath + "\\record.txt"));
+		targetFile.renameTo(new File(recordPath));
     	
-    	return set;
+    	
     }
 }

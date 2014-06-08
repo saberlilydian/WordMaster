@@ -58,6 +58,7 @@ import javax.swing.JOptionPane;
                         if(lineTxt.contains("index") && lineTxt.startsWith(wordBank)){
                         	begin = lineTxt.indexOf('=')+1;
                         	this.index = Integer.parseInt(lineTxt.substring(begin));
+                        	System.out.println("read_settings():index="+this.index);
                         }else if(lineTxt.contains("number") && lineTxt.startsWith(wordBank)){
                         	begin = lineTxt.indexOf('=')+1;
                         	this.old_number = Integer.parseInt(lineTxt.substring(begin));
@@ -85,11 +86,12 @@ import javax.swing.JOptionPane;
 	                    BufferedReader bufferedReader = new BufferedReader(read);
 	                    String lineTxt = null;
 	                    while((lineTxt = bufferedReader.readLine()) != null){	
-	                    	i++;
+	                    	
 	                        if(lineTxt.startsWith(initialChar)){
 	                        	exist = true;
 	                        	break;
 	                        }
+	                        i++;
 	                    }
 	                    read.close();
 	        }else{
@@ -115,8 +117,49 @@ import javax.swing.JOptionPane;
         	}else if(number == 0){
         		number = old_number;                
         	}
+        	
+            int count[] = count_number();
+            System.out.println("set_number():index="+this.index);
+        	if((index+number) > count[wordBank.charAt(0)-'a'+1]){
+        		number = count[wordBank.charAt(0)-'a'+1] - index;
+        		System.out.println("词库剩余单词不足");
+        		JOptionPane.showMessageDialog(null, "词库剩余单词不足");
+        	}
+
         }
 	
+         public int[] count_number(){
+        	int count[] = new int[26];
+       	 for(int i=0;i<26;i++){
+       		 count[i] = 0;
+       	 }
+       	 try {
+                String encoding="GBK";
+                File file=new File(filePath);
+                if(file.isFile() && file.exists()){ //判断文件是否存在
+                    InputStreamReader read = new InputStreamReader(new FileInputStream(file),encoding);//考虑到编码格式
+                    BufferedReader bufferedReader = new BufferedReader(read);
+                    String lineTxt = null;
+                    while((lineTxt = bufferedReader.readLine()) != null){
+                        count[lineTxt.charAt(0)-'a']++;
+                    }
+                    read.close();
+        }else{
+            System.out.println("找不到指定的文件");
+        }
+        } catch (Exception e) {
+            System.out.println("读取文件内容出错");
+            e.printStackTrace();
+        }
+       	 
+       	 for(int i=0;i<25;i++){
+       		 count[i+1] = count[i] + count[i+1];
+       	 }
+       	 
+       	 return count;
+        }
+
+        
 	    public void open_io(){
 	    	int i;
 	    	try {
@@ -126,7 +169,7 @@ import javax.swing.JOptionPane;
                     p_read = new InputStreamReader(new FileInputStream(p_file),encoding);//考虑到编码格式
                     p_bufferedReader = new BufferedReader(p_read);
                     //String lineTxt = null;
-                    for(i=0;i<index-1;i++){
+                    for(i=0;i<index;i++){
                     	p_bufferedReader.readLine();
                     }
                     
@@ -145,6 +188,7 @@ import javax.swing.JOptionPane;
 	    	try {
 				if((lineTxt = p_bufferedReader.readLine()) != null){
 					count++;
+					index++;
 					return lineTxt;
 				}else{
 					p_read.close();
@@ -168,6 +212,37 @@ import javax.swing.JOptionPane;
 	    
 	    public String meaning(String item){
 	    	return item.substring((item.indexOf(' ')+1));
+	    }
+
+		public int getIndex() {
+			return index;
+		}
+	    
+	    public int getWordBankNum(String wordBank){
+	    	int num = 0;
+	    	
+	    	try {
+                String encoding="GBK";
+                File file=new File(filePath);
+                if(file.isFile() && file.exists()){ //判断文件是否存在
+                    InputStreamReader read = new InputStreamReader(new FileInputStream(file),encoding);//考虑到编码格式
+                    BufferedReader bufferedReader = new BufferedReader(read);
+                    String lineTxt = null;
+                    while((lineTxt = bufferedReader.readLine()) != null){
+                        if(lineTxt.startsWith(wordBank)){
+                        	num++;
+                        }
+                    }
+                    read.close();
+        }else{
+            System.out.println("找不到指定的文件");
+        }
+        } catch (Exception e) {
+            System.out.println("读取文件内容出错");
+            e.printStackTrace();
+        }
+	    	
+	    	return num;
 	    }
 	}
 
