@@ -45,6 +45,7 @@ public class NumActionListener implements ActionListener{
 				   break;  //选择从上次背诵的单词开始
 			 	   
 		}
+		Frame.setNumber(fileFDL.getNumber());
 		
         String line = fileFDL.next();
 		

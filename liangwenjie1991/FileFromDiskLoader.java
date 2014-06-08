@@ -113,22 +113,27 @@ import javax.swing.JOptionPane;
 	
         public void set_number(){
         	if(number==0 && old_number==0){
-        		number = 30;
+        		number = 1;
         	}else if(number == 0){
         		number = old_number;                
         	}
         	
             int count[] = count_number();
-            System.out.println("set_number():index="+this.index);
-        	if((index+number) > count[wordBank.charAt(0)-'a'+1]){
-        		number = count[wordBank.charAt(0)-'a'+1] - index;
-        		System.out.println("词库剩余单词不足");
+            System.out.println("count[wordBank.charAt(0)-'a'+1]:"+count[wordBank.charAt(0)-'a'+1]);
+            System.out.println("index:"+index);
+            System.out.println("number:"+number);
+        	if((index+number) > count[wordBank.charAt(0)-'a']){
+        		number = count[wordBank.charAt(0)-'a'] - index;
         		JOptionPane.showMessageDialog(null, "词库剩余单词不足");
         	}
 
         }
 	
-         public int[] count_number(){
+         public int getNumber() {
+			return number;
+		}
+
+		public int[] count_number(){
         	int count[] = new int[26];
        	 for(int i=0;i<26;i++){
        		 count[i] = 0;
@@ -243,6 +248,89 @@ import javax.swing.JOptionPane;
         }
 	    	
 	    	return num;
+	    }
+	    
+	    public int getAllNum(){
+	    	int num=0;
+	    	
+	    	try {
+                String encoding="GBK";
+                File file=new File(filePath);
+                if(file.isFile() && file.exists()){ //判断文件是否存在
+                    InputStreamReader read = new InputStreamReader(new FileInputStream(file),encoding);//考虑到编码格式
+                    BufferedReader bufferedReader = new BufferedReader(read);
+                    String lineTxt = null;
+                    while((lineTxt = bufferedReader.readLine()) != null){
+                        	num++;
+                    }
+                    read.close();
+        }else{
+            System.out.println("找不到指定的文件");
+        }
+        } catch (Exception e) {
+            System.out.println("读取文件内容出错");
+            e.printStackTrace();
+        }
+	    	
+	    	return num;
+	    }
+	    
+	    public int getAllRight(){
+	    	int num = 0;
+	    	
+	    	try {
+                String encoding="GBK";
+                File file=new File(settingsPath);
+                if(file.isFile() && file.exists()){ //判断文件是否存在
+                    InputStreamReader read = new InputStreamReader(new FileInputStream(file),encoding);//考虑到编码格式
+                    BufferedReader bufferedReader = new BufferedReader(read);
+                    String lineTxt = null;
+                    while((lineTxt = bufferedReader.readLine()) != null){
+                        	if(lineTxt.contains("right")){
+                        		num = num + Integer.parseInt(lineTxt.substring(lineTxt.indexOf('=')+1));
+                        	}
+                    }
+                    read.close();
+        }else{
+            System.out.println("找不到指定的文件");
+        }
+        } catch (Exception e) {
+            System.out.println("读取文件内容出错");
+            e.printStackTrace();
+        }
+	    	
+	    	return num;
+	    }
+	    
+	    public int getAllWrong(){
+	    	int num = 0;
+	    	
+	    	try {
+                String encoding="GBK";
+                File file=new File(settingsPath);
+                if(file.isFile() && file.exists()){ //判断文件是否存在
+                    InputStreamReader read = new InputStreamReader(new FileInputStream(file),encoding);//考虑到编码格式
+                    BufferedReader bufferedReader = new BufferedReader(read);
+                    String lineTxt = null;
+                    while((lineTxt = bufferedReader.readLine()) != null){
+                        	if(lineTxt.contains("false")){
+                        		num = num + Integer.parseInt(lineTxt.substring(lineTxt.indexOf('=')+1));
+                        	}
+                    }
+                    read.close();
+        }else{
+            System.out.println("找不到指定的文件");
+        }
+        } catch (Exception e) {
+            System.out.println("读取文件内容出错");
+            e.printStackTrace();
+        }
+	    	
+	    	return num;
+	    }
+	    
+	    public int getAllRemembered(){
+	    	return getAllWrong()+getAllRight();
 	    }
 	}
 

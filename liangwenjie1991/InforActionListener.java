@@ -8,8 +8,8 @@ public class InforActionListener implements ActionListener{
 		String wordBase = Frame.getWordBase();
 		InformationFrame inforFrame = new InformationFrame(wordBase);
 		inforFrame.setTitle("统计信息");
-		inforFrame.setLocation(200, 300);
-		inforFrame.setSize(400, 228);
+		inforFrame.setLocation(20, 20);
+		inforFrame.setSize(1300, 700);
 		inforFrame.setVisible(true);
     }
 }
