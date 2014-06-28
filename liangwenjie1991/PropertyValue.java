@@ -2,6 +2,11 @@ package wordMaster;
 
 import java.io.*;
 import java.util.Scanner;
+import java.io.*;  
+import java.util.*;  
+import org.jdom2.*;
+import org.jdom2.input.SAXBuilder;
+
 
 public class PropertyValue {
 
@@ -21,7 +26,30 @@ public class PropertyValue {
 	
 	private void setup(){
 		File record = new File(recordPath);
+		String lineTxt = null;
+		String english = null;
+		String chinese = null;
 		if(!record.exists()){
+			try {
+				PrintWriter output = new PrintWriter(record);
+			FileFromDiskLoader loader = new FileFromDiskLoader();
+			List allChildren = loader.readFile(filePath);
+			
+			for (int i = 0; i < allChildren.size(); i++) {   
+			     english = ((Element) allChildren.get(i)).getChild("english").getText();   
+			     chinese = ((Element) allChildren.get(i)).getChild("chinese").getText();   
+			     lineTxt = english + "   " + chinese;
+			     output.println(lineTxt+"=0");  
+			     //0 means the word has never been studyed
+			     //1 means the word has been right once
+			     //2 means the word has never been right
+			}
+			output.close();
+			} catch (Exception e) {
+	            System.out.println("读取文件内容出错");
+	            e.printStackTrace();
+	        }
+			/*
 			try {
 				PrintWriter output = new PrintWriter(record);
                 String encoding="GBK";
@@ -43,6 +71,7 @@ public class PropertyValue {
             System.out.println("读取文件内容出错");
             e.printStackTrace();
         }
+			*/
 		}
 	}
 
@@ -115,4 +144,6 @@ public class PropertyValue {
     	
     	
     }
+    
+    
 }

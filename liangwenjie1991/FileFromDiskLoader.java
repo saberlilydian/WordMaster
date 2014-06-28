@@ -1,12 +1,10 @@
 package wordMaster;
 
-import static org.junit.Assert.assertEquals;
+import java.io.*;  
+import java.util.*;  
+import org.jdom2.*;
+import org.jdom2.input.SAXBuilder;
 
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.IOException;
-import java.io.InputStreamReader;
 
 import javax.swing.JOptionPane;
 
@@ -24,6 +22,7 @@ import javax.swing.JOptionPane;
 		private File p_file;
 		private InputStreamReader p_read;
 		private BufferedReader p_bufferedReader;
+		private List allChildren;
 		
 		FileFromDiskLoader(){
 			
@@ -47,6 +46,7 @@ import javax.swing.JOptionPane;
 		}
 		
 		public void read_settings(){
+			
 			try {
                 String encoding="GBK";
                 File file=new File(settingsPath);
@@ -57,11 +57,11 @@ import javax.swing.JOptionPane;
                     String lineTxt = null;
                     
                     while((lineTxt = bufferedReader.readLine()) != null){
-                        if(lineTxt.contains("index") && lineTxt.startsWith(wordBank)){
+                        if(lineTxt.contains("index") && lineTxt.contains(wordBank + ".")){
                         	begin = lineTxt.indexOf('=')+1;
                         	this.index = Integer.parseInt(lineTxt.substring(begin));
                         	System.out.println("read_settings():index="+this.index);
-                        }else if(lineTxt.contains("number") && lineTxt.startsWith(wordBank)){
+                        }else if(lineTxt.contains("number") && lineTxt.contains(wordBank + ".")){
                         	begin = lineTxt.indexOf('=')+1;
                         	this.old_number = Integer.parseInt(lineTxt.substring(begin));
                         }
@@ -77,6 +77,32 @@ import javax.swing.JOptionPane;
 		}
 		
 		public void set_init_char(){
+			int i = 0;
+			boolean exist = false;
+			String english = null;
+			String chinese = null;
+			
+			if(initialChar != null){
+				List allChildren = readFile(filePath);
+				
+				for (i = 0; i < allChildren.size(); i++) {   
+				     english = ((Element) allChildren.get(i)).getChild("english").getText();   
+				     chinese = ((Element) allChildren.get(i)).getChild("chinese").getText();   
+				     
+				     if(english.startsWith(initialChar)){
+                     	exist = true;
+                     	break;
+                     }
+				   }   
+				
+				if(exist){
+					this.index = i ;
+				}else{
+					JOptionPane.showMessageDialog(null, "输入单词在词库中不存在，将从词库第一个单词开始！");
+					Frame.setInput("一");
+				}
+			}
+			/*
 			int i = 0;
 			boolean exist = false;
 			if(initialChar != null){
@@ -110,7 +136,7 @@ import javax.swing.JOptionPane;
 					JOptionPane.showMessageDialog(null, "输入单词在词库中不存在，将从词库第一个单词开始！");
 					Frame.setInput("一");
 				}
-			}
+			}*/
 		}
 	
         public void set_number(){
@@ -121,14 +147,27 @@ import javax.swing.JOptionPane;
         	}
         	
             int count[] = count_number();
-            System.out.println("count[wordBank.charAt(0)-'a'+1]:"+count[wordBank.charAt(0)-'a'+1]);
             System.out.println("index:"+index);
             System.out.println("number:"+number);
-        	if((index+number) > count[wordBank.charAt(0)-'a']){
+        	/*if((index+number) > count[wordBank.charAt(0)-'a']){
         		number = count[wordBank.charAt(0)-'a'] - index;
         		JOptionPane.showMessageDialog(null, "词库剩余单词不足");
-        	}
-
+        	}*/
+            
+            List allChildren = readFile(filePath);
+            String chinese = null;
+            int num = 0;
+            for (int i = index; i < allChildren.size(); i++) {
+            	chinese = ((Element) allChildren.get(i)).getChild("chinese").getText();  
+            	
+            	if(chinese.contains(wordBank)){
+            		num++;
+            	}
+            }
+            if(num < number){
+            	number = num;
+            	JOptionPane.showMessageDialog(null, "词库剩余单词不足");
+            }
         }
 	
          public int getNumber() {
@@ -136,11 +175,29 @@ import javax.swing.JOptionPane;
 		}
 
 		public int[] count_number(){
-        	int count[] = new int[26];
-       	 for(int i=0;i<26;i++){
-       		 count[i] = 0;
-       	 }
-       	 try {
+			
+			String english = null;
+			String chinese = null;
+        	int count[] = new int[9];
+        	String property[] = {"v","n","adj","adv","prep","int","conj","pron","num"};
+       	    for(int i=0;i<9;i++){
+       		    count[i] = 0;
+       	    }
+       	 
+       	    List allChildren = readFile(filePath);
+       	
+       	    for (int i = 0; i < allChildren.size(); i++) {    
+		        chinese = ((Element) allChildren.get(i)).getChild("chinese").getText();   
+		     
+		        for(int j=0;j<9;j++){
+		    	    if(chinese.contains(property[j])){
+		    		    count[j]++;
+		    	    }
+		        }
+		     
+              }
+		 
+       	 /*try {
                 String encoding="GBK";
                 File file=new File(filePath);
                 if(file.isFile() && file.exists()){ //判断文件是否存在
@@ -157,17 +214,22 @@ import javax.swing.JOptionPane;
         } catch (Exception e) {
             System.out.println("读取文件内容出错");
             e.printStackTrace();
-        }
+        }*/
        	 
        	 for(int i=0;i<25;i++){
        		 count[i+1] = count[i] + count[i+1];
        	 }
        	 
        	 return count;
+       	 
         }
+		
 
         
 	    public void open_io(){
+	    	List allChildren = readFile(filePath);
+	    	this.allChildren = allChildren;
+	    	/*
 	    	int i;
 	    	try {
                 String encoding="GBK";
@@ -186,10 +248,41 @@ import javax.swing.JOptionPane;
         } catch (Exception e) {
             System.out.println("读取字典文件内容出错");
             e.printStackTrace();
-        }
+        }*/
 	    }
 	
 	    public String next(){
+	    	String lineTxt = null;
+	    	String english = null;
+			String chinese = null;
+			
+	    	if(count < number){
+	    	if(index < allChildren.size()){
+	    		
+				index++;
+				english = ((Element) allChildren.get(index)).getChild("english").getText();   
+			    chinese = ((Element) allChildren.get(index)).getChild("chinese").getText();   
+			    lineTxt = english + "   " + chinese;
+			    
+			    if(chinese.contains(wordBank)){
+			    	count++;
+			    	return lineTxt;
+			    }else{
+			    	return next();
+			    }
+			    	
+			    
+			    
+	    	}else{
+	    		System.out.println("该词库已背诵完成");
+	    	}
+	    	}else{
+	    		System.out.println("已背完规定的单词");
+	    		return "完";
+	    	}
+	    	
+	    	return null;
+	    	/*
 	    	String lineTxt = null;
 	    	if(count < number){
 	    	try {
@@ -211,6 +304,7 @@ import javax.swing.JOptionPane;
 	    	}
 	    	
 	    	return null;
+	    	*/
 	    }
 	
 	    public String word(String item){
@@ -218,7 +312,7 @@ import javax.swing.JOptionPane;
 	    }
 	    
 	    public String meaning(String item){
-	    	return item.substring((item.indexOf(' ')+1));
+	    	return item.substring((item.lastIndexOf(' ')+1));
 	    }
 
 		public int getIndex() {
@@ -228,7 +322,18 @@ import javax.swing.JOptionPane;
 	    public int getWordBankNum(String wordBank){
 	    	int num = 0;
 	    	
-	    	try {
+	    	List allChildren = readFile(filePath);
+	    	String english = null;
+			String chinese = null;
+			
+			for (int i = 0; i < allChildren.size(); i++) {    
+			     chinese = ((Element) allChildren.get(i)).getChild("chinese").getText();   
+			     
+			     if(chinese.contains(wordBank)){
+                	num++;
+                }
+			   }   
+	    	/*try {
                 String encoding="GBK";
                 File file=new File(filePath);
                 if(file.isFile() && file.exists()){ //判断文件是否存在
@@ -247,7 +352,7 @@ import javax.swing.JOptionPane;
         } catch (Exception e) {
             System.out.println("读取文件内容出错");
             e.printStackTrace();
-        }
+        }*/
 	    	
 	    	return num;
 	    }
@@ -255,6 +360,9 @@ import javax.swing.JOptionPane;
 	    public int getAllNum(){
 	    	int num=0;
 	    	
+	    	List allChildren = readFile(filePath);
+	    	num = allChildren.size();
+	    	/*
 	    	try {
                 String encoding="GBK";
                 File file=new File(filePath);
@@ -272,7 +380,7 @@ import javax.swing.JOptionPane;
         } catch (Exception e) {
             System.out.println("读取文件内容出错");
             e.printStackTrace();
-        }
+        }*/
 	    	
 	    	return num;
 	    }
@@ -334,5 +442,28 @@ import javax.swing.JOptionPane;
 	    public int getAllRemembered(){
 	    	return getAllWrong()+getAllRight();
 	    }
+	    
+	    public static List readFile(String filePath){
+	    	List allChildren = null;
+	    	try {   
+	    		   SAXBuilder builder = new SAXBuilder();   
+	    		   Document doc = builder.build(new File(filePath));   
+	    		   Element foo = doc.getRootElement();   
+	    		   allChildren = foo.getChildren();   
+	    		   
+	    		  } catch (Exception e) {   
+	    			  System.out.println("读取字典文件内容出错");
+	    		   e.printStackTrace();   
+	    		  }   
+	    		  
+	    
+	        return allChildren;
+	    }
+	    
+	    
+	    
+	    
+	    
+
 	}
 

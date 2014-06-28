@@ -1,19 +1,25 @@
 package wordMaster;
 
 import java.io.*;
+import java.io.*;  
+import java.util.*;  
+import org.jdom2.*;
+import org.jdom2.input.SAXBuilder;
+
+
 //import java.util.*;
 
 
 public class Properties {
 
-	private char wordBank;
+	private String wordBank;
 	private int index = 0;
 	private int number = 0;
 	private int right;
 	private int wrong;
 	private String settingsPath = null;
 	
-	Properties(char wordBank,String settingsPath){
+	Properties(String wordBank,String settingsPath){
 		this.wordBank = wordBank;
 		this.settingsPath = settingsPath;
 		read_settings(wordBank);
@@ -68,7 +74,7 @@ public class Properties {
 		
 	}
 
-    private void read_settings(char wordBank){
+    private void read_settings(String wordBank){
     	try {
             String encoding="GBK";
             File file=new File(settingsPath);
@@ -97,7 +103,7 @@ public class Properties {
     }
     }
 
-	public char getWordBank() {
+	public String getWordBank() {
 		return wordBank;
 	}
 
