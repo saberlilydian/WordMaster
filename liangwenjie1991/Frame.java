@@ -7,15 +7,17 @@ import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
-import javax.swing.JOptionPane;
+//import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 
 @SuppressWarnings("serial")
 public class Frame extends JFrame{
 	
-	private static String[] array1 = {"选择第一个单词开始","输入单词","选择从上次背诵的单词开始"};
+	private static String[] array1 = {"背诵方式","选择第一个","输入单词","从上次开始"};
 	private static JComboBox start = new JComboBox(array1);  //起始单词
+	private static String[] propertyArray = {"词库","v","n","adj","adv","prep","int","conj","pron","num"};
+	private static JComboBox propertyJComboBox = new JComboBox(propertyArray);  //起始单词
 	//static String userName = "";
 	private static String wordBase = "";
 	private static JLabel label = new JLabel("");     //中文释义
@@ -27,13 +29,13 @@ public class Frame extends JFrame{
 	private static int wrong = 0;    //错误单词数
 	
 	private static int addWrong = 0;    //错误单词数
-	private static int addRight = 0;    //错误单词数
-	private static int addNumber = 0;    //错误单词数
+	private static int addRight = 0;    //正确单词数
+	private static int addNumber = 0;    //新增单词数
     
 	public Frame(){
 		
-		Boolean test = false;
-		do{
+		//Boolean test = false;
+		/**do{
 			if(test)
 				JOptionPane.showMessageDialog(null, "输入不合法！");
 			wordBase = JOptionPane.showInputDialog("请选择词库（A-Z）：");
@@ -42,13 +44,15 @@ public class Frame extends JFrame{
 					&&!wordBase.equals("h")&&!wordBase.equals("i")&&!wordBase.equals("j")&&!wordBase.equals("k")&&!wordBase.equals("l")&&!wordBase.equals("m")&&!wordBase.equals("n")
 					&&!wordBase.equals("o")&&!wordBase.equals("p")&&!wordBase.equals("q")&&!wordBase.equals("r")&&!wordBase.equals("s")&&!wordBase.equals("t")&&!wordBase.equals("u")
 					&&!wordBase.equals("v")&&!wordBase.equals("w")&&!wordBase.equals("x")&&!wordBase.equals("y")&&!wordBase.equals("z");
-		}while(test);
+		}while(test);**/
 		
 		setLayout(new GridLayout(4, 2, 0, 0));
 		
 		JPanel p1 = new JPanel();
 		p1.setLayout(new FlowLayout(FlowLayout.LEFT,0,0));
+		p1.add(propertyJComboBox);
 		p1.add(start);
+		
 		add(p1);
 		
 		JPanel p2 = new JPanel();
@@ -85,24 +89,28 @@ public class Frame extends JFrame{
 	    
 		JPanel p8 = new JPanel();
 	    JButton nextWord = new JButton("下一个");   //“下一个”按钮
-	    JButton newWordBase = new JButton("重新选择词库");   //“重新选择词库”按钮
+	    //JButton newWordBase = new JButton("重新选择词库");   //“重新选择词库”按钮
 	    p8.setLayout(new FlowLayout(FlowLayout.LEFT,0,0));
 	    p8.add(nextWord);
-	    p8.add(newWordBase);
+	    //p8.add(newWordBase);
 	    add(p8);
 	    
 		infor.addActionListener(new InforActionListener());
 		num.addActionListener(new NumActionListener());	
 		
 		start.addActionListener(new WordBaseActionListener());
-		start.setSelectedIndex(0);
+		//start.setSelectedIndex(0);
 		
 		nextWord.addActionListener(new NextActionListener());
-		newWordBase.addActionListener(new NewWBActionListener());
+		propertyJComboBox.addActionListener(new NewWBActionListener());
 	}
 	
 	public static JComboBox getJComboBox(){
 		return start;
+	}
+	
+	public static JComboBox getpropertyJComboBox(){
+		return propertyJComboBox;
 	}
 	
 	public static JTextField getJText(){

@@ -4,14 +4,12 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
 //import javax.swing.JComboBox;
-import javax.swing.JOptionPane;
+import javax.swing.JComboBox;
+//import javax.swing.JOptionPane;
 
 public class NewWBActionListener  implements ActionListener{
-	public void actionPerformed(ActionEvent e){
-		//JComboBox jcbo = Frame.getJComboBox();  
-		//int method = jcbo.getSelectedIndex();
-		
-		Boolean test = false;
+	public void actionPerformed(ActionEvent e){		
+		/**Boolean test = false;
 		String newWB = "";
 		do{
 			if(test)
@@ -24,7 +22,17 @@ public class NewWBActionListener  implements ActionListener{
 					&&!newWB.equals("v")&&!newWB.equals("w")&&!newWB.equals("x")&&!newWB.equals("y")&&!newWB.equals("z");
 		}while(test);
 		
-		Frame.setWordBase(newWB);		
-		//jcbo.setSelectedIndex(0);
+		Frame.setWordBase(newWB);	**/
+		
+		
+		String newWB = "";
+		
+		JComboBox jcbo = Frame.getpropertyJComboBox();
+		if(jcbo.getSelectedIndex()!=0){
+			newWB = jcbo.getSelectedItem().toString();
+			Frame.setWordBase(newWB);
+		}
+		
+		//System.out.println(Frame.getWordBase().equals("n"));
 	}
 }

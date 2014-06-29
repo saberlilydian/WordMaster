@@ -9,7 +9,7 @@ public class OnceInforFrame extends JFrame{
 	public OnceInforFrame(String wordBase, int number, int correct, int wrong, double rate){
 		NumberFormat numF = NumberFormat.getPercentInstance();
 		numF.setMinimumFractionDigits(2);		
-		Object[][] cellData = {{"所选词库名", wordBase.toUpperCase()}, {"所选单词数量", number}, {"正确单词数", correct}, {"错误单词数", wrong}, {"正确率", numF.format(rate)}};
+		Object[][] cellData = {{"所选词库名", wordBase.toLowerCase()}, {"所选单词数量", number}, {"正确单词数", correct}, {"错误单词数", wrong}, {"正确率", numF.format(rate)}};
 		String[] columnNames = {"", ""}; 
 		JTable table = new JTable(cellData, columnNames);
 		table.setRowHeight(30); 

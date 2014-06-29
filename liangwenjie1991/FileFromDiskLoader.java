@@ -22,7 +22,7 @@ import javax.swing.JOptionPane;
 		private File p_file;
 		private InputStreamReader p_read;
 		private BufferedReader p_bufferedReader;
-		private List allChildren;
+		private List allChildren = new LinkedList();
 		
 		FileFromDiskLoader(){
 			
@@ -57,11 +57,11 @@ import javax.swing.JOptionPane;
                     String lineTxt = null;
                     
                     while((lineTxt = bufferedReader.readLine()) != null){
-                        if(lineTxt.contains("index") && lineTxt.contains(wordBank + ".")){
+                        if(lineTxt.contains("index") && lineTxt.startsWith(wordBank)){
                         	begin = lineTxt.indexOf('=')+1;
                         	this.index = Integer.parseInt(lineTxt.substring(begin));
                         	System.out.println("read_settings():index="+this.index);
-                        }else if(lineTxt.contains("number") && lineTxt.contains(wordBank + ".")){
+                        }else if(lineTxt.contains("number") && lineTxt.startsWith(wordBank)){
                         	begin = lineTxt.indexOf('=')+1;
                         	this.old_number = Integer.parseInt(lineTxt.substring(begin));
                         }
@@ -78,11 +78,13 @@ import javax.swing.JOptionPane;
 		
 		public void set_init_char(){
 			int i = 0;
+			int j = 0;
 			boolean exist = false;
 			String english = null;
 			String chinese = null;
 			
 			if(initialChar != null){
+				if(!initialChar.equals("startFromTheFirst")){
 				List allChildren = readFile(filePath);
 				
 				for (i = 0; i < allChildren.size(); i++) {   
@@ -97,11 +99,28 @@ import javax.swing.JOptionPane;
 				
 				if(exist){
 					this.index = i ;
+					
 				}else{
 					JOptionPane.showMessageDialog(null, "输入单词在词库中不存在，将从词库第一个单词开始！");
 					Frame.setInput("一");
 				}
+				}else{
+					System.out.println("set_init_char():startfromthefirst");
+					List allChildren = readFile(filePath);
+					
+					for (j = 0; j < allChildren.size(); j++) {   
+					     english = ((Element) allChildren.get(j)).getChild("english").getText();   
+					     chinese = ((Element) allChildren.get(j)).getChild("chinese").getText();   
+					     
+					     if(chinese.startsWith(wordBank)){
+	                     	this.index = j;
+	                     	System.out.println("set_init_char():startfromthefirst:the first:"+this.index);
+	                     	break;
+	                     }
+					   }   
+				}
 			}
+			System.out.println("set_init_char()，this。index："+this.index);
 			/*
 			int i = 0;
 			boolean exist = false;
@@ -146,9 +165,9 @@ import javax.swing.JOptionPane;
         		number = old_number;                
         	}
         	
-            int count[] = count_number();
-            System.out.println("index:"+index);
-            System.out.println("number:"+number);
+            //int count[] = count_number();
+            //System.out.println("index:"+index);
+            //System.out.println("number:"+number);
         	/*if((index+number) > count[wordBank.charAt(0)-'a']){
         		number = count[wordBank.charAt(0)-'a'] - index;
         		JOptionPane.showMessageDialog(null, "词库剩余单词不足");
@@ -157,13 +176,15 @@ import javax.swing.JOptionPane;
             List allChildren = readFile(filePath);
             String chinese = null;
             int num = 0;
-            for (int i = index; i < allChildren.size(); i++) {
+            //System.out.println("set_number(),this.index"+this.index);
+            for (int i = this.index; i < allChildren.size(); i++) {
             	chinese = ((Element) allChildren.get(i)).getChild("chinese").getText();  
             	
-            	if(chinese.contains(wordBank)){
+            	if(chinese.startsWith(wordBank)){
             		num++;
             	}
             }
+            System.out.println("set_number():num:"+num);
             if(num < number){
             	number = num;
             	JOptionPane.showMessageDialog(null, "词库剩余单词不足");
@@ -216,7 +237,7 @@ import javax.swing.JOptionPane;
             e.printStackTrace();
         }*/
        	 
-       	 for(int i=0;i<25;i++){
+       	 for(int i=0;i<8;i++){
        		 count[i+1] = count[i] + count[i+1];
        	 }
        	 
@@ -258,13 +279,13 @@ import javax.swing.JOptionPane;
 			
 	    	if(count < number){
 	    	if(index < allChildren.size()){
-	    		
-				index++;
+	    		//System.out.println("next()，this。index："+this.index);
 				english = ((Element) allChildren.get(index)).getChild("english").getText();   
 			    chinese = ((Element) allChildren.get(index)).getChild("chinese").getText();   
 			    lineTxt = english + "   " + chinese;
-			    
-			    if(chinese.contains(wordBank)){
+			    //System.out.println("next()，line："+lineTxt);
+			    index++;
+			    if(chinese.startsWith(wordBank)){
 			    	count++;
 			    	return lineTxt;
 			    }else{
@@ -329,7 +350,7 @@ import javax.swing.JOptionPane;
 			for (int i = 0; i < allChildren.size(); i++) {    
 			     chinese = ((Element) allChildren.get(i)).getChild("chinese").getText();   
 			     
-			     if(chinese.contains(wordBank)){
+			     if(chinese.startsWith(wordBank)){
                 	num++;
                 }
 			   }   
@@ -444,20 +465,21 @@ import javax.swing.JOptionPane;
 	    }
 	    
 	    public static List readFile(String filePath){
-	    	List allChildren = null;
+			List allChildren = null;
+			
 	    	try {   
 	    		   SAXBuilder builder = new SAXBuilder();   
 	    		   Document doc = builder.build(new File(filePath));   
 	    		   Element foo = doc.getRootElement();   
-	    		   allChildren = foo.getChildren();   
-	    		   
+	    		   allChildren = foo.getChildren("word");   
+	    		  
 	    		  } catch (Exception e) {   
 	    			  System.out.println("读取字典文件内容出错");
 	    		   e.printStackTrace();   
 	    		  }   
 	    		  
 	    
-	        return allChildren;
+	        return allChildren; 
 	    }
 	    
 	    

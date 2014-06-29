@@ -8,17 +8,17 @@ import javax.swing.JTable;
 @SuppressWarnings("serial")
 public class InformationFrame extends JFrame{
 	public InformationFrame(String wordBase){
-		setLayout(new GridLayout(3, 2, 50, 50));
+		setLayout(new GridLayout(3, 3, 50, 50));
 		
 		NumberFormat numF = NumberFormat.getPercentInstance();
 		numF.setMinimumFractionDigits(2);		
         
-		String filePath = "dictionary.txt";
+		String filePath = "dictionary.xml";
 		String settingsPath = "settings.txt";
 		
 		FileFromDiskLoader fileFDL = new FileFromDiskLoader(filePath, settingsPath, wordBase, null, 0);
 		
-		Properties proper = new Properties(wordBase.charAt(0), settingsPath); 
+		Properties proper = new Properties(wordBase, settingsPath); 
 		//int index = proper.getIndex();
 		
 		int correct = proper.getRight();
@@ -31,7 +31,7 @@ public class InformationFrame extends JFrame{
 		else
 			rate = ((double)correct)/num;
 		
-		Object[][] cellData = {{"词库名", wordBase.toUpperCase()}, {"词库单词总数", wordNum}, {"已背单词数", num}, {"正确单词数", correct}, {"错误单词数", wrong}, {"正确率", numF.format(rate)}};
+		Object[][] cellData = {{"词库名", wordBase.toLowerCase()}, {"词库单词总数", wordNum}, {"已背单词数", num}, {"正确单词数", correct}, {"错误单词数", wrong}, {"正确率", numF.format(rate)}};
 		String[] columnNames = {"", ""}; 
 		JTable table = new JTable(cellData, columnNames);
 		table.setRowHeight(31); 		

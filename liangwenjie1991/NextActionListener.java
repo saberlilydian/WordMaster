@@ -18,12 +18,12 @@ public class NextActionListener implements ActionListener{
 		String wordBase = Frame.getWordBase();
 		String settingsPath = "settings.txt";
         
-		String filePath = "dictionary.txt";
+		String filePath = "dictionary.xml";
 		String recordPath = "record.txt";
 		
 		PropertyValue proValue = new PropertyValue(filePath, recordPath);
 		int status = proValue.getStatus(word);
-		Properties proper = new Properties(wordBase.charAt(0), settingsPath); 
+		Properties proper = new Properties(wordBase, settingsPath); 
 		
 		int index = fileFDL.getIndex();
 		
@@ -71,10 +71,10 @@ public class NextActionListener implements ActionListener{
 			onceInforFrameFrame.setLocation(200, 300);
 			onceInforFrameFrame.setSize(400,190);
 			onceInforFrameFrame.setVisible(true);
-			System.out.println("LLL"+proper.getWrong());
-			System.out.println("DDD"+Frame.getAddWrong());
-			System.out.println("old Right"+proper.getRight());
-			System.out.println("new Right"+Frame.getAddRight());
+			//System.out.println("LLL"+proper.getWrong());
+			//System.out.println("DDD"+Frame.getAddWrong());
+			//System.out.println("old Right"+proper.getRight());
+			//System.out.println("new Right"+Frame.getAddRight());
 			//Frame.getAddWrong()
 			proper.build(index, num, proper.getRight()+Frame.getAddRight(), proper.getWrong()+Frame.getAddWrong());
 			
