@@ -91,7 +91,7 @@ import javax.swing.JOptionPane;
 				     english = ((Element) allChildren.get(i)).getChild("english").getText();   
 				     chinese = ((Element) allChildren.get(i)).getChild("chinese").getText();   
 				     
-				     if(english.equals(initialChar) && chinese.startsWith(wordBank)){
+				     if(english.startsWith(initialChar)){
                      	exist = true;
                      	break;
                      }
@@ -101,19 +101,6 @@ import javax.swing.JOptionPane;
 					this.index = i ;
 					
 				}else{
-					System.out.println("set_init_char():startfromthefirst");
-					allChildren = readFile(filePath);
-					
-					for (j = 0; j < allChildren.size(); j++) {   
-					     english = ((Element) allChildren.get(j)).getChild("english").getText();   
-					     chinese = ((Element) allChildren.get(j)).getChild("chinese").getText();   
-					     
-					     if(chinese.startsWith(wordBank)){
-	                     	this.index = j;
-	                     	System.out.println("set_init_char():startfromthefirst:the first:"+this.index);
-	                     	break;
-	                     }
-					   }   
 					JOptionPane.showMessageDialog(null, "输入单词在词库中不存在，将从词库第一个单词开始！");
 					Frame.setInput("一");
 				}

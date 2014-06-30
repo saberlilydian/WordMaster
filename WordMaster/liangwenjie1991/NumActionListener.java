@@ -21,10 +21,6 @@ public class NumActionListener implements ActionListener{
 		int num = 0;  //背单词数量
 		try{
 			num = Integer.parseInt(numString);
-			if(num<1){
-				JOptionPane.showMessageDialog(null, "请重新输入一个数字！");
-				return;
-			}
 		}catch(Exception e1){
 			JOptionPane.showMessageDialog(null, "请重新输入一个数字！");
 		}
